@@ -1,0 +1,6 @@
+@GestaoOscAPI_HostAddress = http://localhost:5184
+
+GET {{GestaoOscAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
