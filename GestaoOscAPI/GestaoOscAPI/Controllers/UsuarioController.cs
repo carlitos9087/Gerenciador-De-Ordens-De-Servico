@@ -19,6 +19,7 @@ public class UsuarioController : ControllerBase
         this.usuarioService = usuarioService;
     }
 
+
     [HttpPost("login")]
     public IActionResult Login([FromBody] LoginRequest request)
     {
@@ -37,6 +38,61 @@ public class UsuarioController : ControllerBase
         };
 
         return Ok(response);
+    }
+
+    [HttpGet("/usuarios")]
+    public IActionResult ListarUsuarios()
+    {
+        var usuarios = usuarioService.ListarTodos();
+        var usuariosResponse = usuarios.Select( u => new UsuarioResponse
+                {
+                    Id = u.Id,
+                    Nome = u.Nome,
+                    Email = u.Email,
+                    Perfil = u.Perfil,
+                    Setor = u.Setor
+                }  
+            ).ToList();
+
+        return Ok(usuariosResponse);
+    }
+
+    [HttpGet("/usuarios/{id}")]
+    public IActionResult BuscarUsuarioPorId(int id)
+    {
+        Usuario? usuario = usuarioService.BuscarPorId(id);
+
+        if (usuario == null)
+            return NotFound();
+
+        UsuarioResponse usuarioResponse = new UsuarioResponse
+        {
+            Id = usuario.Id,
+            Nome = usuario.Nome,
+            Email = usuario.Email,
+            Perfil = usuario.Perfil,
+            Setor = usuario.Setor
+        };
+        return Ok(usuarioResponse);
+    }
+
+    [HttpGet("/usuarios/email")]
+    public IActionResult BuscarUsuarioPorEmail([FromQuery] string email)
+    {
+        Usuario? usuario = usuarioService.BuscarPorEmail(email);
+
+        if (usuario == null)
+            return NotFound();
+
+        UsuarioResponse usuarioResponse = new UsuarioResponse
+        {
+            Id = usuario.Id,
+            Nome = usuario.Nome,
+            Email = usuario.Email,
+            Perfil = usuario.Perfil,
+            Setor = usuario.Setor
+        };
+        return Ok(usuarioResponse);
     }
 
     [HttpGet("/usuarios/gerentes/{setor}")]

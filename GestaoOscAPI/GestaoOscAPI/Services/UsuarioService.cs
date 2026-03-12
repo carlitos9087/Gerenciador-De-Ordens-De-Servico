@@ -1,6 +1,7 @@
 ﻿using GestaoOscAPI.Repositories;
 using GestaoOscAPI.Models.Enums;
 using GestaoOscAPI.Models.Entities;
+using GestaoOscAPI.Models.Responses;
 
 namespace GestaoOscAPI.Services
 {
@@ -12,6 +13,7 @@ namespace GestaoOscAPI.Services
         {
             this.usuarioRepository = usuarioRepository;
         }
+
 
         public Usuario? ValidarLogin(string email, string senha)
         {
@@ -25,6 +27,10 @@ namespace GestaoOscAPI.Services
             
         }
 
+        public List<Usuario> ListarTodos()
+        {
+            return usuarioRepository.ListarTodos();
+        }
         public Usuario? BuscarPorId(int id)
         {
             return usuarioRepository.BuscarPorId(id);
