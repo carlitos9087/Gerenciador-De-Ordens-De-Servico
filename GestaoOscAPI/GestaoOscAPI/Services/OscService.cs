@@ -1,6 +1,7 @@
 ﻿using GestaoOscAPI.Repositories;
 using GestaoOscAPI.Models.Enums;
 using GestaoOscAPI.Models.Entities;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace GestaoOscAPI.Services
 {
@@ -24,7 +25,7 @@ namespace GestaoOscAPI.Services
             {
                 Descricao = descricao,
                 Equipamento = equipamento,
-                DataEmissao = DateTime.Now,
+                DataEmissao = DateTime.UtcNow,
                 EmitenteId = usuarioLogado.Id,
                 EmitenteNome = usuarioLogado.Nome,
                 EmitenteSetor = usuarioLogado.Setor.ToString(),
@@ -51,6 +52,30 @@ namespace GestaoOscAPI.Services
         public bool Atualizar(Osc osc)
         {
             return oscRepository.Atualizar(osc);
+        }
+
+        public bool AssinarOSC (int oscId, int usuarioId)
+        {
+            Osc? osc = oscRepository.BuscarPorId(oscId);
+
+            if (osc == null)
+                return false;
+
+            if (osc.GerenteQualidade != null && usuarioId == osc.GerenteQualidade.Id)
+                osc.QualidadeAssinou = true;
+            else if (osc.GerenteEngenharia != null && usuarioId == osc.GerenteEngenharia.Id)
+                osc.EngenhariaAssinou = true;
+            else if (osc.GerenteProducao != null && usuarioId == osc.GerenteProducao.Id)
+                osc.ProducaoAssinou = true;
+            else
+                return false;
+
+            if (osc.QualidadeAssinou && osc.EngenhariaAssinou && osc.ProducaoAssinou)
+                osc.Status = StatusOsc.AguardandoValidacao;
+
+            oscRepository.Atualizar(osc);
+            return true;
+
         }
 
         public bool Cancelar(int id)

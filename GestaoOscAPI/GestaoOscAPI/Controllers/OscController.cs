@@ -76,6 +76,18 @@ public class OscController : ControllerBase
         return Ok(osc);
     }
 
+    [HttpPost("{id}/assinar")]
+    public IActionResult AssinarOsc(int id, [FromBody] int usuarioId)
+    {
+        bool resultado = oscService.AssinarOSC(id, usuarioId);
+
+        if (!resultado)
+            return Forbid();
+
+        return Ok();
+
+    }
+
     [HttpPut("{id}/cancelar")]
     public IActionResult CancelarOsc(int id)
     {
