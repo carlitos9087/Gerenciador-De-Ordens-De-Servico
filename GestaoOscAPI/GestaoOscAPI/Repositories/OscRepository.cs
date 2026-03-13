@@ -1,5 +1,6 @@
 ﻿using GestaoOscAPI.Data;
 using GestaoOscAPI.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace GestaoOscAPI.Repositories
 {
@@ -21,12 +22,20 @@ namespace GestaoOscAPI.Repositories
 
         public List<Osc> ListarTodas()
         {
-            return context.Oscs.ToList();
+            return context.Oscs
+        .Include(o => o.GerenteQualidade)
+        .Include(o => o.GerenteEngenharia)
+        .Include(o => o.GerenteProducao)
+        .ToList();
         }
 
         public Osc? BuscarPorId(int id)
         {
-            return context.Oscs.FirstOrDefault(osc => osc.Id == id);
+            return context.Oscs
+                .Include(o => o.GerenteQualidade)
+                .Include(o => o.GerenteEngenharia)
+                .Include(o => o.GerenteProducao)
+                .FirstOrDefault(o => o.Id == id);
         }
 
         public bool Atualizar(Osc osc)
