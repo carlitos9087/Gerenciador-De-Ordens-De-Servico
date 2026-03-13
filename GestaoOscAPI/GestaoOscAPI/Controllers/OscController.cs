@@ -82,7 +82,7 @@ public class OscController : ControllerBase
         bool resultado = oscService.AssinarOSC(id, usuarioId);
 
         if (!resultado)
-            return Forbid();
+            return Unauthorized();
 
         return Ok();
 
