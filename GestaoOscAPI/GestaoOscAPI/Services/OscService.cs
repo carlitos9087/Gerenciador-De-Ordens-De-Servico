@@ -14,7 +14,7 @@ namespace GestaoOscAPI.Services
             this.oscRepository = oscRepository;
         }
 
-        public Osc CriarOsc(string descricao, string equipamento, 
+        public Osc CriarOsc(string descricao, string equipamento, string AcaoTomada,
             Usuario gerenteQualidade,
             Usuario gerenteEngenharia,
             Usuario gerenteProducao,
@@ -25,6 +25,7 @@ namespace GestaoOscAPI.Services
             {
                 Descricao = descricao,
                 Equipamento = equipamento,
+                AcaoTomada = AcaoTomada,
                 DataEmissao = DateTime.UtcNow,
                 EmitenteId = usuarioLogado.Id,
                 EmitenteNome = usuarioLogado.Nome,
