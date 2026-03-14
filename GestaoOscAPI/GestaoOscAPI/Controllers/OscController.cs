@@ -51,7 +51,7 @@ public class OscController : ControllerBase
             || gerenteProducao == null || usuarioLogado == null)
             return NotFound("Um ou mais usuários não foram encontrados.");
 
-        Osc osc = oscService.CriarOsc(request.Descricao, request.Equipamento, gerenteQualidade, gerenteEngenharia, gerenteProducao, usuarioLogado);
+        Osc osc = oscService.CriarOsc(request.Descricao, request.Equipamento, request.AcaoTomada, gerenteQualidade, gerenteEngenharia, gerenteProducao, usuarioLogado);
         return Ok(OscResponse.FromOsc(osc));
 
     }
@@ -66,6 +66,7 @@ public class OscController : ControllerBase
 
         osc.Descricao = request.Descricao;
         osc.Equipamento = request.Equipamento;
+        osc.AcaoTomada = request.AcaoTomada;
 
         if (request.GerenteQualidadeId > 0)
             osc.GerenteQualidade = usuarioService.BuscarPorId(request.GerenteQualidadeId);  

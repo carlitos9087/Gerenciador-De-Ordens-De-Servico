@@ -8,6 +8,7 @@ namespace GestaoOscAPI.Models.Responses
         public int Id { get; set; }
         public string Descricao { get; set; } = string.Empty;
         public string Equipamento { get; set; } = string.Empty;
+        public string AcaoTomada {  get; set; } = string.Empty;
         public DateTime DataEmissao { get; set; }
         public StatusOsc Status { get; set; }
         public int EmitenteId { get; set; }
@@ -30,6 +31,7 @@ namespace GestaoOscAPI.Models.Responses
                 Descricao = osc.Descricao,
                 Equipamento = osc.Equipamento,
                 DataEmissao = osc.DataEmissao,
+                AcaoTomada = osc.AcaoTomada,
                 Status = osc.Status,
                 EmitenteId = osc.EmitenteId,
                 EmitenteNome = osc.EmitenteNome,
