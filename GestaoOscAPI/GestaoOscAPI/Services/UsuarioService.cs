@@ -62,6 +62,11 @@ namespace GestaoOscAPI.Services
             return usuarioRepository.BuscarPorSetor(setor);
         }
 
+        public bool Atualizar(Usuario usuario)
+        {
+            return usuarioRepository.Atualizar(usuario);
+        }
+
         public bool Deletar(int id)
         {
             return usuarioRepository.Deletar(id);
