@@ -50,6 +50,16 @@ namespace GestaoOscAPI.Services
             return oscRepository.BuscarPorId(id);
         }
 
+        public List<Osc> BuscarPorEmitente(int emitenteId)
+        {
+            return oscRepository.BuscarPorEmitente(emitenteId);
+        }
+
+        public List<Osc> BuscarPorGerente(int usuarioId)
+        {
+            return oscRepository.BuscarPorGerente(usuarioId); 
+        }
+
         public bool Atualizar(Osc osc)
         {
             return oscRepository.Atualizar(osc);

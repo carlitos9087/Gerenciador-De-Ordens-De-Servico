@@ -1,5 +1,6 @@
 ﻿using GestaoOscAPI.Data;
 using GestaoOscAPI.Models.Entities;
+using GestaoOscAPI.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace GestaoOscAPI.Repositories
@@ -27,6 +28,28 @@ namespace GestaoOscAPI.Repositories
         .Include(o => o.GerenteEngenharia)
         .Include(o => o.GerenteProducao)
         .ToList();
+        }
+
+        public List<Osc> BuscarPorEmitente (int emitendeId)
+        {
+            return context.Oscs
+                .Include(o => o.GerenteQualidade)
+                .Include(o => o.GerenteEngenharia)
+                .Include(o => o.GerenteProducao)
+                .Where(o => o.EmitenteId == emitendeId)
+                .ToList();
+        }
+
+        public List<Osc> BuscarPorGerente(int usuarioId)
+        {
+            return context.Oscs
+                .Include(o => o.GerenteQualidade)
+                .Include(o => o.GerenteEngenharia)
+                .Include(o => o.GerenteProducao)
+                .Where(o => o.GerenteQualidade!.Id == usuarioId ||
+                            o.GerenteEngenharia!.Id == usuarioId ||
+                            o.GerenteProducao!.Id == usuarioId)
+                .ToList();
         }
 
         public Osc? BuscarPorId(int id)

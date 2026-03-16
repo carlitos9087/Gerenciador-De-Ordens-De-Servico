@@ -39,6 +39,32 @@ public class OscController : ControllerBase
         return Ok(OscResponse.FromOsc(osc));
     }
 
+    [HttpGet("emitente/{id}")]
+    public IActionResult BuscarPorEmitente(int id)
+    {
+        var emitente = usuarioService.BuscarPorId(id);
+
+        if (emitente != null)
+        {
+            return Ok(oscService.BuscarPorEmitente(emitente.Id).Select(o => OscResponse.FromOsc(o)));
+        }
+
+        return NotFound();
+    }
+
+    [HttpGet("gerente/{id}")]
+    public IActionResult BuscarPorGerente(int id)
+    {
+        var gerente = usuarioService.BuscarPorId(id);
+
+        if (gerente != null)
+        {
+            return Ok(oscService.BuscarPorGerente(gerente.Id).Select(o => OscResponse.FromOsc(o)));
+        }
+
+        return NotFound();
+    }
+
     [HttpPost]
     public IActionResult InserirOsc([FromBody] CriarOscRequest request)
     {

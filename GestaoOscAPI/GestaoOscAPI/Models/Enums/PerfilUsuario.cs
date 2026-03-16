@@ -2,8 +2,9 @@
 {
     public enum PerfilUsuario
     {
-        Emitente, 
-        Gerente,
-        Administrador
+        Emitente = 1,
+        Gerente = 2,
+        Administrador = 3,
+        Executante = 4
     }
 }
