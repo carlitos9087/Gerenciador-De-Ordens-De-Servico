@@ -119,17 +119,21 @@ public class OscController : ControllerBase
     }
 
     [HttpPut("{id}/cancelar")]
-    public IActionResult CancelarOsc(int id)
+    public IActionResult CancelarOsc(int id, [FromBody] int usuarioId)
     {
-        Osc? osc = oscService.BuscarPorId(id);
+        if (oscService.Cancelar(id, usuarioId))
+            return Ok();
 
-        if (osc == null)
-            return NotFound();
+        return Unauthorized();
+    }
 
-        if (oscService.Cancelar(id))
-            return Ok(OscResponse.FromOsc(osc));
+    [HttpPut("{id}/concluir")]
+    public IActionResult ConcluirOsc(int id, [FromBody] int usuarioId)
+    {
+        if (oscService.Concluir(id, usuarioId))
+            return Ok();
 
-        return NotFound();
+        return Unauthorized();
     }
 
     [HttpDelete("{id}")]

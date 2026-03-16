@@ -8,10 +8,12 @@ namespace GestaoOscAPI.Services
     public class OscService
     {
         private readonly OscRepository oscRepository;
+        private readonly UsuarioService usuarioService;
 
-        public OscService(OscRepository oscRepository)
+        public OscService(OscRepository oscRepository, UsuarioService usuarioService)
         {
             this.oscRepository = oscRepository;
+            this.usuarioService = usuarioService;
         }
 
         public Osc CriarOsc(string descricao, string equipamento, string AcaoTomada,
@@ -65,6 +67,39 @@ namespace GestaoOscAPI.Services
             return oscRepository.Atualizar(osc);
         }
 
+        public bool Concluir(int oscId, int usuarioId)
+        {
+            Usuario? usuario = usuarioService.BuscarPorId(usuarioId);
+            Osc? osc = oscRepository.BuscarPorId(oscId);
+
+            if (usuario == null || usuario.Perfil != PerfilUsuario.Administrador)
+                return false;
+            if (osc == null)
+                return false;
+            if (!osc.QualidadeAssinou || !osc.EngenhariaAssinou || !osc.ProducaoAssinou)
+                return false;
+
+            osc.Status = StatusOsc.Concluida;
+            return oscRepository.Atualizar(osc);
+        }
+
+        public bool Cancelar(int oscId, int usuarioId)
+        {
+            Usuario? usuario = usuarioService.BuscarPorId(usuarioId);
+            Osc? osc = oscRepository.BuscarPorId(oscId);
+
+            if (usuario == null || usuario.Perfil != PerfilUsuario.Administrador)
+                return false;
+
+            if (osc == null)
+                return false;
+
+            osc.Status = StatusOsc.Cancelada;
+            return oscRepository.Atualizar(osc);
+        }
+
+
+
         public bool AssinarOSC (int oscId, int usuarioId)
         {
             Osc? osc = oscRepository.BuscarPorId(oscId);
@@ -87,17 +122,6 @@ namespace GestaoOscAPI.Services
             oscRepository.Atualizar(osc);
             return true;
 
-        }
-
-        public bool Cancelar(int id)
-        {
-            Osc? osc = oscRepository.BuscarPorId(id);
-
-            if (osc == null)
-                return false;
-
-            osc.Status = StatusOsc.Cancelada;
-            return oscRepository.Atualizar(osc);
         }
 
         public bool Deletar (int id)
