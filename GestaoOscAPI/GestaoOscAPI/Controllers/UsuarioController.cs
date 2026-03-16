@@ -33,18 +33,9 @@ public class UsuarioController : ControllerBase
     public IActionResult ListarUsuarios()
     {
         var usuarios = usuarioService.ListarTodos();
-        var usuariosResponse = usuarios.Select( u => UsuarioResponse.FromUsuario(u)).ToList();
+        var usuariosResponse = usuarios.Select(u => UsuarioResponse.FromUsuario(u)).ToList();
 
         return Ok(usuariosResponse);
-    }
-
-    [HttpPost("/usuarios")]
-    public IActionResult InserirUsuario([FromBody] CriarUsuarioRequest request)
-    {
-        Usuario usuario = usuarioService.CriarUsuario(request.Nome, request.Email, request.Senha, request.Perfil, request.Setor);
-        
-        return Ok(UsuarioResponse.FromUsuario(usuario));
-
     }
 
     [HttpGet("/usuarios/{id}")]
@@ -79,5 +70,43 @@ public class UsuarioController : ControllerBase
         return Ok(response);
     }
 
+    [HttpPost("/usuarios")]
+    public IActionResult InserirUsuario([FromBody] CriarUsuarioRequest request)
+    {
+        Usuario usuario = usuarioService.CriarUsuario(request.Nome, request.Email, request.Senha, request.Perfil, request.Setor);
+
+        return Ok(UsuarioResponse.FromUsuario(usuario));
+
+    }
+
+    [HttpPut("/usuarios/{id}")]
+    public IActionResult AtualizarUsuario(int id, [FromBody] AtualizarUsuarioRequest request)
+    {
+        Usuario? usuario = usuarioService.BuscarPorId(id);
+
+        if (usuario == null)
+            return NotFound();
+
+        usuario.Nome = request.Nome;
+        usuario.Email = request.Email;
+        usuario.Senha = request.Senha;
+        usuario.Perfil = request.Perfil;
+        usuario.Setor = request.Setor;
+
+        usuarioService.Atualizar(usuario);
+        return Ok(UsuarioResponse.FromUsuario(usuario));
+    }
+
+    [HttpDelete("/usuarios/{id}")]
+    public IActionResult DeletarUsuario (int id)
+    {
+        Usuario? usuario = usuarioService.BuscarPorId(id);
+
+        if (usuario == null) 
+            return NotFound();
+
+        return Ok(usuarioService.Deletar(id));
+
+    }
 }
 

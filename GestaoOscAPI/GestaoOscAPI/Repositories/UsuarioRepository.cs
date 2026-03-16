@@ -40,6 +40,13 @@ namespace GestaoOscAPI.Repositories
             return context.Usuarios.Where(usuario => usuario.Setor == setor).ToList();
         }
 
+        public bool Atualizar(Usuario usuario)
+        {
+            context.Usuarios.Update(usuario);
+            context.SaveChanges();
+            return true;
+        }
+
         public bool Deletar(int id)
         {
             Usuario? usuario = context.Usuarios.FirstOrDefault(usuario => usuario.Id == id);
