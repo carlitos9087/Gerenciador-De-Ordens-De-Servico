@@ -68,16 +68,12 @@ public class OscController : ControllerBase
     [HttpPost]
     public IActionResult InserirOsc([FromBody] CriarOscRequest request)
     {
-        Usuario? gerenteQualidade = usuarioService.BuscarPorId(request.GerenteQualidadeId);
-        Usuario? gerenteEngenharia = usuarioService.BuscarPorId(request.GerenteEngenhariaId);
-        Usuario? gerenteProducao = usuarioService.BuscarPorId(request.GerenteProducaoId);
         Usuario? usuarioLogado = usuarioService.BuscarPorId(request.UsuarioLogadoId);
 
-        if (gerenteQualidade == null || gerenteEngenharia == null
-            || gerenteProducao == null || usuarioLogado == null)
-            return NotFound("Um ou mais usuários não foram encontrados.");
+        if (usuarioLogado == null)
+            return NotFound();
 
-        Osc osc = oscService.CriarOsc(request.Descricao, request.Equipamento, request.AcaoTomada, gerenteQualidade, gerenteEngenharia, gerenteProducao, usuarioLogado);
+        Osc osc = oscService.CriarOsc(request.Descricao, request.Equipamento, request.AcaoTomada, request.PrecisaQualidade, request.PrecisaEngenharia, request.PrecisaProducao, usuarioLogado);
         return Ok(OscResponse.FromOsc(osc));
 
     }
@@ -93,13 +89,9 @@ public class OscController : ControllerBase
         osc.Descricao = request.Descricao;
         osc.Equipamento = request.Equipamento;
         osc.AcaoTomada = request.AcaoTomada;
-
-        if (request.GerenteQualidadeId > 0)
-            osc.GerenteQualidade = usuarioService.BuscarPorId(request.GerenteQualidadeId);  
-        if (request.GerenteEngenhariaId > 0)
-            osc.GerenteEngenharia = usuarioService.BuscarPorId(request.GerenteEngenhariaId);  
-        if (request.GerenteProducaoId > 0)
-            osc.GerenteProducao = usuarioService.BuscarPorId(request.GerenteProducaoId);  
+        osc.PrecisaQualidade = request.PrecisaQualidade;
+        osc.PrecisaEngenharia = request.PrecisaEngenharia;
+        osc.PrecisaProducao = request.PrecisaProducao;
 
 
         oscService.Atualizar(osc);

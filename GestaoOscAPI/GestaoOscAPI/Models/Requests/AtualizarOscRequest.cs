@@ -4,10 +4,10 @@
     {
         public string Descricao { get; set; } = string.Empty;
         public string Equipamento { get; set; } = string.Empty;
-        public string AcaoTomada {  get; set; } = string.Empty;
-        public int GerenteQualidadeId { get; set; }
-        public int GerenteEngenhariaId { get; set; }
-        public int GerenteProducaoId { get; set; }
+        public string AcaoTomada { get; set; } = string.Empty;
+        public bool PrecisaQualidade { get; set; } = false;
+        public bool PrecisaEngenharia { get; set; } = false;
+        public bool PrecisaProducao { get; set; } = false;
 
     }
 }

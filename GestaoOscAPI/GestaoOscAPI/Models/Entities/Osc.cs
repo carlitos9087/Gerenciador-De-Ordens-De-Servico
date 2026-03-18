@@ -17,9 +17,9 @@ namespace GestaoOscAPI.Models.Entities
         public string EmitenteNome { get; set; } = string.Empty;
         public string EmitenteSetor { get; set; } = string.Empty;
 
-        public Usuario? GerenteQualidade { get; set; }
-        public Usuario? GerenteEngenharia { get; set; }
-        public Usuario? GerenteProducao { get; set; }
+        public bool PrecisaQualidade { get; set; } = false;
+        public bool PrecisaEngenharia { get; set; } = false;
+        public bool PrecisaProducao { get; set; } = false;
 
         public bool QualidadeAssinou { get; set; } = false;
         public bool EngenhariaAssinou { get; set; } = false;

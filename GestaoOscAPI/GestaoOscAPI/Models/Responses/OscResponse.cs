@@ -14,9 +14,9 @@ namespace GestaoOscAPI.Models.Responses
         public int EmitenteId { get; set; }
         public string EmitenteNome { get; set; } = string.Empty;
         public string EmitenteSetor { get; set; } = string.Empty;
-        public UsuarioResponse? GerenteQualidade { get; set; }
-        public UsuarioResponse? GerenteEngenharia { get; set; }
-        public UsuarioResponse? GerenteProducao { get; set; }
+        public bool PrecisaQualidade { get; set; } = false;
+        public bool PrecisaEngenharia { get; set; } = false;
+        public bool PrecisaProducao { get; set; } = false;
         public bool QualidadeAssinou { get; set; }
         public bool EngenhariaAssinou { get; set; }
         public bool ProducaoAssinou { get; set; }
@@ -36,9 +36,9 @@ namespace GestaoOscAPI.Models.Responses
                 EmitenteId = osc.EmitenteId,
                 EmitenteNome = osc.EmitenteNome,
                 EmitenteSetor = osc.EmitenteSetor,
-                GerenteQualidade = osc.GerenteQualidade != null ? UsuarioResponse.FromUsuario(osc.GerenteQualidade) : null,
-                GerenteEngenharia = osc.GerenteEngenharia != null ? UsuarioResponse.FromUsuario(osc.GerenteEngenharia) : null,
-                GerenteProducao = osc.GerenteProducao != null ? UsuarioResponse.FromUsuario(osc.GerenteProducao) : null,
+                PrecisaQualidade = osc.PrecisaQualidade,
+                PrecisaEngenharia = osc.PrecisaEngenharia,
+                PrecisaProducao = osc.PrecisaProducao,
                 QualidadeAssinou = osc.QualidadeAssinou,
                 EngenhariaAssinou = osc.EngenhariaAssinou,
                 ProducaoAssinou = osc.ProducaoAssinou

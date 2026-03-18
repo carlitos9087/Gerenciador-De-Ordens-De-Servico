@@ -23,32 +23,25 @@ namespace GestaoOscAPI.Repositories
 
         public List<Osc> ListarTodas()
         {
-            return context.Oscs
-        .Include(o => o.GerenteQualidade)
-        .Include(o => o.GerenteEngenharia)
-        .Include(o => o.GerenteProducao)
-        .ToList();
+            return context.Oscs.ToList();
         }
 
         public List<Osc> BuscarPorEmitente (int emitendeId)
         {
-            return context.Oscs
-                .Include(o => o.GerenteQualidade)
-                .Include(o => o.GerenteEngenharia)
-                .Include(o => o.GerenteProducao)
-                .Where(o => o.EmitenteId == emitendeId)
-                .ToList();
+            return context.Oscs.ToList();
         }
 
         public List<Osc> BuscarPorGerente(int usuarioId)
         {
+            Usuario? usuario = context.Usuarios.FirstOrDefault(u => u.Id == usuarioId);
+            if (usuario == null)
+                return new List<Osc>();
+
             return context.Oscs
-                .Include(o => o.GerenteQualidade)
-                .Include(o => o.GerenteEngenharia)
-                .Include(o => o.GerenteProducao)
-                .Where(o => o.GerenteQualidade!.Id == usuarioId ||
-                            o.GerenteEngenharia!.Id == usuarioId ||
-                            o.GerenteProducao!.Id == usuarioId)
+                .Where(o =>
+                    (usuario.Setor == Setor.Qualidade && o.PrecisaQualidade && !o.QualidadeAssinou) ||
+                    (usuario.Setor == Setor.Engenharia && o.PrecisaEngenharia && !o.EngenhariaAssinou) ||
+                    (usuario.Setor == Setor.Producao && o.PrecisaProducao && !o.ProducaoAssinou))
                 .ToList();
         }
 

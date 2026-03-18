@@ -17,9 +17,9 @@ namespace GestaoOscAPI.Services
         }
 
         public Osc CriarOsc(string descricao, string equipamento, string AcaoTomada,
-            Usuario gerenteQualidade,
-            Usuario gerenteEngenharia,
-            Usuario gerenteProducao,
+            bool PrecisaQualidade,
+            bool PrecisaEngenharia,
+            bool PrecisaProducao,
             Usuario usuarioLogado
             )
         {
@@ -32,9 +32,9 @@ namespace GestaoOscAPI.Services
                 EmitenteId = usuarioLogado.Id,
                 EmitenteNome = usuarioLogado.Nome,
                 EmitenteSetor = usuarioLogado.Setor.ToString(),
-                GerenteQualidade = gerenteQualidade,
-                GerenteEngenharia = gerenteEngenharia,
-                GerenteProducao = gerenteProducao,
+                PrecisaQualidade = PrecisaQualidade,
+                PrecisaEngenharia = PrecisaEngenharia,
+                PrecisaProducao = PrecisaProducao
 
             };
 
@@ -103,20 +103,26 @@ namespace GestaoOscAPI.Services
         public bool AssinarOSC (int oscId, int usuarioId)
         {
             Osc? osc = oscRepository.BuscarPorId(oscId);
+            Usuario? usuario = usuarioService.BuscarPorId(usuarioId);
 
-            if (osc == null)
+            if (osc == null || usuario == null)
                 return false;
 
-            if (osc.GerenteQualidade != null && usuarioId == osc.GerenteQualidade.Id)
+            if (usuario.Setor == Setor.Qualidade && osc.PrecisaQualidade && !osc.QualidadeAssinou)
                 osc.QualidadeAssinou = true;
-            else if (osc.GerenteEngenharia != null && usuarioId == osc.GerenteEngenharia.Id)
+            else if (usuario.Setor == Setor.Engenharia && osc.PrecisaEngenharia && !osc.EngenhariaAssinou)
                 osc.EngenhariaAssinou = true;
-            else if (osc.GerenteProducao != null && usuarioId == osc.GerenteProducao.Id)
+            else if (usuario.Setor == Setor.Producao && osc.PrecisaProducao && !osc.ProducaoAssinou)
                 osc.ProducaoAssinou = true;
             else
                 return false;
 
-            if (osc.QualidadeAssinou && osc.EngenhariaAssinou && osc.ProducaoAssinou)
+            bool todasAssinadas =
+        (!osc.PrecisaQualidade || osc.QualidadeAssinou) &&
+        (!osc.PrecisaEngenharia || osc.EngenhariaAssinou) &&
+        (!osc.PrecisaProducao || osc.ProducaoAssinou);
+
+            if (todasAssinadas)
                 osc.Status = StatusOsc.AguardandoValidacao;
 
             oscRepository.Atualizar(osc);
