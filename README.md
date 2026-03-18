@@ -10,7 +10,7 @@ Sistema de gerenciamento de Ordens de Serviço Crítico (OSC) com fluxo de cria�
 
 - **Emitente** — cria OSCs e acompanha o status
 - **Gerente** — assina as OSCs do seu setor (Qualidade, Engenharia ou Produção)
-- **Administrador** — valida (conclui) ou cancela as OSCs
+- **Administrador** — valida (conclui) ou cancela as OSCs e gerencia usuários
 - **Executante** — visualiza todas as OSCs
 
 **Fluxo da OSC:**
@@ -98,13 +98,12 @@ GestaoOscAPI/
 │   │   ├── Osc.cs              # Entidade OSC
 │   │   └── Usuario.cs          # Entidade Usuário
 │   ├── Enums/
-│   │   ├── PerfilUsuario.cs    # Emitente, Gerente, Administrador, Executante
+│   │   ├── PerfilUsuario.cs    # Emitente, Executante, Gerente, Administrador
 │   │   ├── Setor.cs            # Qualidade, Engenharia, Producao, Nenhum
 │   │   └── StatusOsc.cs        # AguardandoAssinaturas, AguardandoValidacao, Concluida, Cancelada
 │   ├── Requests/
 │   │   ├── LoginRequest.cs
 │   │   ├── CriarOscRequest.cs
-│   │   ├── AtualizarOscRequest.cs
 │   │   ├── CriarUsuarioRequest.cs
 │   │   ├── AtualizarUsuarioRequest.cs
 │   │   └── AdminOscRequest.cs
@@ -134,7 +133,7 @@ GestaoOscAPI/
 | GET | `/usuarios/{id}` | Buscar usuário por ID |
 | GET | `/usuarios/email?email=` | Buscar usuário por email |
 | GET | `/usuarios/gerentes/{setor}` | Listar gerentes por setor |
-| POST | `/usuarios` | Criar novo usuário |
+| POST | `/usuarios` | Criar novo usuário (apenas Admin) |
 | PUT | `/usuarios/{id}` | Atualizar usuário |
 | DELETE | `/usuarios/{id}` | Deletar usuário |
 
@@ -144,11 +143,10 @@ GestaoOscAPI/
 |--------|------|-----------|
 | GET | `/osc` | Listar todas as OSCs |
 | GET | `/osc/{id}` | Buscar OSC por ID |
-| GET | `/osc/emitente/{id}` | Listar OSCs do emitente |
-| GET | `/osc/gerente/{id}` | Listar OSCs do gerente |
+| GET | `/osc/emitente/{id}` | Listar OSCs criadas pelo emitente |
+| GET | `/osc/gerente/{id}` | Listar OSCs pendentes de assinatura do gerente |
 | POST | `/osc` | Criar nova OSC |
-| PUT | `/osc/{id}` | Atualizar OSC |
 | DELETE | `/osc/{id}` | Deletar OSC |
-| POST | `/osc/{id}/assinar` | Assinar OSC (gerente) |
-| PUT | `/osc/{id}/concluir` | Concluir OSC (admin) |
-| PUT | `/osc/{id}/cancelar` | Cancelar OSC (admin) |
+| POST | `/osc/{id}/assinar` | Assinar OSC (apenas Gerente) |
+| PUT | `/osc/{id}/concluir` | Concluir OSC (apenas Admin) |
+| PUT | `/osc/{id}/cancelar` | Cancelar OSC (apenas Admin) |
