@@ -73,29 +73,9 @@ public class OscController : ControllerBase
         if (usuarioLogado == null)
             return NotFound();
 
-        Osc osc = oscService.CriarOsc(request.Descricao, request.Equipamento, request.AcaoTomada, request.PrecisaQualidade, request.PrecisaEngenharia, request.PrecisaProducao, usuarioLogado);
+        Osc osc = oscService.CriarOsc(request.Descricao, request.Equipamento, request.AcaoTomada, usuarioLogado);
         return Ok(OscResponse.FromOsc(osc));
 
-    }
-
-    [HttpPut("{id}")]
-    public IActionResult AtualizarOsc(int id, [FromBody] AtualizarOscRequest request)
-    {
-        Osc? osc = oscService.BuscarPorId(id);
-
-        if (osc == null)
-            return NotFound();
-
-        osc.Descricao = request.Descricao;
-        osc.Equipamento = request.Equipamento;
-        osc.AcaoTomada = request.AcaoTomada;
-        osc.PrecisaQualidade = request.PrecisaQualidade;
-        osc.PrecisaEngenharia = request.PrecisaEngenharia;
-        osc.PrecisaProducao = request.PrecisaProducao;
-
-
-        oscService.Atualizar(osc);
-        return Ok(OscResponse.FromOsc(osc));
     }
 
     [HttpPost("{id}/assinar")]

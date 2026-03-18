@@ -28,7 +28,9 @@ namespace GestaoOscAPI.Repositories
 
         public List<Osc> BuscarPorEmitente (int emitendeId)
         {
-            return context.Oscs.ToList();
+            return context.Oscs
+                .Where(o => o.EmitenteId == emitendeId)
+                .ToList();
         }
 
         public List<Osc> BuscarPorGerente(int usuarioId)
@@ -39,18 +41,16 @@ namespace GestaoOscAPI.Repositories
 
             return context.Oscs
                 .Where(o =>
-                    (usuario.Setor == Setor.Qualidade && o.PrecisaQualidade && !o.QualidadeAssinou) ||
-                    (usuario.Setor == Setor.Engenharia && o.PrecisaEngenharia && !o.EngenhariaAssinou) ||
-                    (usuario.Setor == Setor.Producao && o.PrecisaProducao && !o.ProducaoAssinou))
+                    o.Status == StatusOsc.AguardandoAssinaturas &&
+                    ((usuario.Setor == Setor.Qualidade &&!o.QualidadeAssinou) ||
+                    (usuario.Setor == Setor.Engenharia &&!o.EngenhariaAssinou) ||
+                    (usuario.Setor == Setor.Producao && !o.ProducaoAssinou)))
                 .ToList();
         }
 
         public Osc? BuscarPorId(int id)
         {
             return context.Oscs
-                .Include(o => o.GerenteQualidade)
-                .Include(o => o.GerenteEngenharia)
-                .Include(o => o.GerenteProducao)
                 .FirstOrDefault(o => o.Id == id);
         }
 

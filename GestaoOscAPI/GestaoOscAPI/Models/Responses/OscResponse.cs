@@ -14,9 +14,6 @@ namespace GestaoOscAPI.Models.Responses
         public int EmitenteId { get; set; }
         public string EmitenteNome { get; set; } = string.Empty;
         public string EmitenteSetor { get; set; } = string.Empty;
-        public bool PrecisaQualidade { get; set; } = false;
-        public bool PrecisaEngenharia { get; set; } = false;
-        public bool PrecisaProducao { get; set; } = false;
         public bool QualidadeAssinou { get; set; }
         public bool EngenhariaAssinou { get; set; }
         public bool ProducaoAssinou { get; set; }
@@ -36,9 +33,6 @@ namespace GestaoOscAPI.Models.Responses
                 EmitenteId = osc.EmitenteId,
                 EmitenteNome = osc.EmitenteNome,
                 EmitenteSetor = osc.EmitenteSetor,
-                PrecisaQualidade = osc.PrecisaQualidade,
-                PrecisaEngenharia = osc.PrecisaEngenharia,
-                PrecisaProducao = osc.PrecisaProducao,
                 QualidadeAssinou = osc.QualidadeAssinou,
                 EngenhariaAssinou = osc.EngenhariaAssinou,
                 ProducaoAssinou = osc.ProducaoAssinou
