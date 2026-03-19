@@ -14,9 +14,10 @@ namespace GestaoOscAPI.Services
             this.usuarioRepository = usuarioRepository;
         }
 
+
         public Usuario? CriarUsuario(string nome, string email, string senha, PerfilUsuario perfil, Setor setor, int adminId)
         {
-            Usuario ? admin = usuarioRepository.BuscarPorId(adminId);
+            Usuario? admin = usuarioRepository.BuscarPorId(adminId);
 
             if (admin != null && admin.Perfil == PerfilUsuario.Administrador)
             {
@@ -24,7 +25,7 @@ namespace GestaoOscAPI.Services
                 {
                     Nome = nome,
                     Email = email,
-                    Senha = senha,
+                    Senha = BCrypt.Net.BCrypt.HashPassword(senha),
                     Perfil = perfil,
                     Setor = setor
 
@@ -43,10 +44,12 @@ namespace GestaoOscAPI.Services
         {
             Usuario? user = usuarioRepository.BuscarPorEmail(email);
 
-            if (user == null || user.Senha != senha)
-            {
+            if (user == null)
                 return null;
-            }
+
+            if (!BCrypt.Net.BCrypt.Verify(senha, user.Senha))
+                return null;
+
             return user;
             
         }
