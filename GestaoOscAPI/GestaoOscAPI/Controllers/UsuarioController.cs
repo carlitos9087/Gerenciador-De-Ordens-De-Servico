@@ -3,6 +3,7 @@ using GestaoOscAPI.Models.Enums;
 using GestaoOscAPI.Models.Requests;
 using GestaoOscAPI.Models.Responses;
 using GestaoOscAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GestaoOscAPI.Controllers;
@@ -13,10 +14,12 @@ namespace GestaoOscAPI.Controllers;
 public class UsuarioController : ControllerBase
 {
     private readonly UsuarioService usuarioService;
+    private readonly TokenService tokenService;
 
-    public UsuarioController(UsuarioService usuarioService)
+    public UsuarioController(UsuarioService usuarioService, TokenService tokenService)
     {
         this.usuarioService = usuarioService;
+        this.tokenService = tokenService;
     }
 
 
@@ -26,9 +29,17 @@ public class UsuarioController : ControllerBase
         Usuario? user = usuarioService.ValidarLogin(request.Email, request.Senha);
         if (user == null)
             return Unauthorized();
-        return Ok(UsuarioResponse.FromUsuario(user));
+
+        var token = tokenService.GerarToken(user);
+
+        return Ok( new LoginResponse
+        {
+            Token = token,
+            Usuario = UsuarioResponse.FromUsuario(user)
+        });
     }
 
+    [Authorize]
     [HttpGet("/usuarios")]
     public IActionResult ListarUsuarios()
     {
@@ -38,6 +49,7 @@ public class UsuarioController : ControllerBase
         return Ok(usuariosResponse);
     }
 
+    [Authorize]
     [HttpGet("/usuarios/{id}")]
     public IActionResult BuscarUsuarioPorId(int id)
     {
@@ -49,6 +61,7 @@ public class UsuarioController : ControllerBase
         return Ok(UsuarioResponse.FromUsuario(usuario));
     }
 
+    [Authorize]
     [HttpGet("/usuarios/email")]
     public IActionResult BuscarUsuarioPorEmail([FromQuery] string email)
     {
@@ -60,6 +73,7 @@ public class UsuarioController : ControllerBase
         return Ok(UsuarioResponse.FromUsuario(usuario));
     }
 
+    [Authorize]
     [HttpGet("/usuarios/gerentes/{setor}")]
     public IActionResult BuscarGerentesPorSetor(Setor setor)
     {
@@ -70,6 +84,7 @@ public class UsuarioController : ControllerBase
         return Ok(response);
     }
 
+    [Authorize]
     [HttpPost("/usuarios")]
     public IActionResult InserirUsuario([FromBody] CriarUsuarioRequest request)
     {
@@ -82,6 +97,7 @@ public class UsuarioController : ControllerBase
 
     }
 
+    [Authorize]
     [HttpPut("/usuarios/{id}")]
     public IActionResult AtualizarUsuario(int id, [FromBody] AtualizarUsuarioRequest request)
     {
@@ -100,6 +116,7 @@ public class UsuarioController : ControllerBase
         return Ok(UsuarioResponse.FromUsuario(usuario));
     }
 
+    [Authorize]
     [HttpDelete("/usuarios/{id}")]
     public IActionResult DeletarUsuario (int id)
     {

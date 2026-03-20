@@ -2,11 +2,13 @@
 using GestaoOscAPI.Models.Requests;
 using GestaoOscAPI.Models.Responses;
 using GestaoOscAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
 namespace GestaoOscAPI.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("/osc")]
 public class OscController : ControllerBase
