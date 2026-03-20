@@ -29,6 +29,22 @@ AguardandoAssinaturas → AguardandoValidacao → Concluida
 - [Npgsql (PostgreSQL)](https://www.npgsql.org/)
 - [Supabase](https://supabase.com/) — banco de dados PostgreSQL na nuvem
 - [Swagger / Swashbuckle](https://swagger.io/)
+- [BCrypt.Net-Next](https://github.com/BcryptNet/bcrypt.net) — hash de senhas
+- [Microsoft.AspNetCore.Authentication.JwtBearer](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/jwt-authn) — autenticação JWT
+
+---
+
+## 🔐 Segurança
+
+- **Senhas** — armazenadas com hash BCrypt (irreversível)
+- **Autenticação** — JWT Bearer Token com expiração de 8 horas
+- **Endpoints protegidos** — todos os endpoints exceto `/auth/login` exigem token válido
+
+**Fluxo de autenticação:**
+```
+POST /auth/login → recebe token JWT
+Todas as requisições → Header: Authorization: Bearer {token}
+```
 
 ---
 
@@ -52,6 +68,11 @@ cd Gerenciador-De-Ordens-De-Servico
 {
   "ConnectionStrings": {
     "DefaultConnection": "User Id=SEU_USER;Password=SUA_SENHA;Server=SEU_SERVER;Port=5432;Database=postgres;SSL Mode=Require;Trust Server Certificate=true"
+  },
+  "Jwt": {
+    "Key": "SUA_CHAVE_SECRETA_MINIMO_32_CARACTERES",
+    "Issuer": "GestaoOscAPI",
+    "Audience": "GestaoOscAPIUsers"
   },
   "Logging": {
     "LogLevel": {
@@ -81,6 +102,11 @@ dotnet run
 
 O Swagger estará disponível em: `https://localhost:{porta}/swagger`
 
+**6. Para testar no Swagger com autenticação:**
+- Faça o `POST /auth/login` e copie o token retornado
+- Clique em **Authorize** 🔒 no topo do Swagger
+- Digite `Bearer {seu token}` e clique em Authorize
+
 ---
 
 ## 📁 Estrutura do projeto
@@ -108,6 +134,7 @@ GestaoOscAPI/
 │   │   ├── AtualizarUsuarioRequest.cs
 │   │   └── AdminOscRequest.cs
 │   └── Responses/
+│       ├── LoginResponse.cs    # Token JWT + dados do usuário
 │       ├── OscResponse.cs      # OSC sem dados sensíveis
 │       └── UsuarioResponse.cs  # Usuário sem senha
 ├── Repositories/
@@ -115,6 +142,7 @@ GestaoOscAPI/
 │   └── UsuarioRepository.cs    # Acesso ao banco — Usuários
 ├── Services/
 │   ├── OscService.cs           # Regras de negócio das OSCs
+│   ├── TokenService.cs         # Geração do token JWT
 │   └── UsuarioService.cs       # Regras de negócio dos usuários
 ├── appsettings.json            # Configurações gerais (sem credenciais)
 └── Program.cs                  # Configuração da aplicação
@@ -124,11 +152,13 @@ GestaoOscAPI/
 
 ## 🔗 Endpoints da API
 
+> ⚠️ Todos os endpoints exceto `/auth/login` exigem o header `Authorization: Bearer {token}`
+
 ### Autenticação e Usuários
 
 | Método | Rota | Descrição |
 |--------|------|-----------|
-| POST | `/auth/login` | Login do usuário |
+| POST | `/auth/login` | Login — retorna token JWT + dados do usuário |
 | GET | `/usuarios` | Listar todos os usuários |
 | GET | `/usuarios/{id}` | Buscar usuário por ID |
 | GET | `/usuarios/email?email=` | Buscar usuário por email |
@@ -147,6 +177,6 @@ GestaoOscAPI/
 | GET | `/osc/gerente/{id}` | Listar OSCs pendentes de assinatura do gerente |
 | POST | `/osc` | Criar nova OSC |
 | DELETE | `/osc/{id}` | Deletar OSC |
-| POST | `/osc/{id}/assinar` | Assinar OSC (apenas Gerente) |
-| PUT | `/osc/{id}/concluir` | Concluir OSC (apenas Admin) |
+| POST | `/osc/{id}/assinar` | Assinar OSC (qualquer gerente do setor) |
+| PUT | `/osc/{id}/concluir` | Concluir OSC (apenas Admin, todos devem ter assinado) |
 | PUT | `/osc/{id}/cancelar` | Cancelar OSC (apenas Admin) |
