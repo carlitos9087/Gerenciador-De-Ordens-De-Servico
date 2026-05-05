@@ -1,20 +1,20 @@
-# GestaoOscAPI
+# GestaoOsAPI
 
-API REST para gerenciamento de Ordens de Serviço Crítico (OSC), desenvolvida em C# com ASP.NET Core e Entity Framework.
+API REST para gerenciamento de Ordens de Serviço (OS), desenvolvida em C# com ASP.NET Core e Entity Framework.
 
 ---
 
 ## 📋 Descrição
 
-Sistema de gerenciamento de Ordens de Serviço Crítico (OSC) com fluxo de criação, assinatura e validação. O sistema conta com 4 perfis de usuário:
+Sistema de gerenciamento de Ordens de Serviço (OS) com fluxo de criação, assinatura e validação. O sistema conta com 4 perfis de usuário:
 
-- **Emitente** — cria OSCs e acompanha o status
-- **Gerente** — assina as OSCs do seu setor (Qualidade, Engenharia ou Produção)
-- **Administrador** — valida (conclui) ou cancela as OSCs e gerencia usuários
-- **Executante** — visualiza todas as OSCs
+- **Emitente** — cria OS e acompanha o status
+- **Gerente** — assina as OS do seu setor (Qualidade, Engenharia ou Produção)
+- **Administrador** — valida (conclui) ou cancela as OSs e gerencia usuários
+- **Executante** — visualiza todas as OSs
 
-**Fluxo da OSC:**
-```
+**Fluxo da OS:**
+```text
 AguardandoAssinaturas → AguardandoValidacao → Concluida
                                             → Cancelada
 ```
@@ -41,7 +41,7 @@ AguardandoAssinaturas → AguardandoValidacao → Concluida
 - **Endpoints protegidos** — todos os endpoints exceto `/auth/login` exigem token válido
 
 **Fluxo de autenticação:**
-```
+```text
 POST /auth/login → recebe token JWT
 Todas as requisições → Header: Authorization: Bearer {token}
 ```
@@ -59,7 +59,7 @@ Todas as requisições → Header: Authorization: Bearer {token}
 
 **1. Clone o repositório:**
 ```bash
-git clone https://github.com/carlitos9087/Gerenciador-De-Ordens-De-Servico.git
+git clone https://github.com/JoaoVGomees/Gerenciador-De-Ordens-De-Servico.git
 cd Gerenciador-De-Ordens-De-Servico
 ```
 
@@ -82,6 +82,7 @@ cd Gerenciador-De-Ordens-De-Servico
   }
 }
 ```
+
 > ⚠️ Este arquivo está no `.gitignore` e nunca deve ser commitado.
 
 **3. Instale a ferramenta do Entity Framework:**
@@ -111,37 +112,37 @@ O Swagger estará disponível em: `https://localhost:{porta}/swagger`
 
 ## 📁 Estrutura do projeto
 
-```
+```text
 GestaoOscAPI/
 ├── Controllers/
-│   ├── OscController.cs        # Endpoints das OSCs
+│   ├── OsController.cs         # Endpoints das OSs
 │   └── UsuarioController.cs    # Endpoints dos usuários
 ├── Data/
 │   └── AppDbContext.cs         # Configuração do banco de dados
 ├── Migrations/                 # Migrations do Entity Framework
 ├── Models/
 │   ├── Entities/
-│   │   ├── Osc.cs              # Entidade OSC
+│   │   ├── Os.cs               # Entidade OS
 │   │   └── Usuario.cs          # Entidade Usuário
 │   ├── Enums/
 │   │   ├── PerfilUsuario.cs    # Emitente, Executante, Gerente, Administrador
 │   │   ├── Setor.cs            # Qualidade, Engenharia, Producao, Nenhum
-│   │   └── StatusOsc.cs        # AguardandoAssinaturas, AguardandoValidacao, Concluida, Cancelada
+│   │   └── StatusOs.cs         # AguardandoAssinaturas, AguardandoValidacao, Concluida, Cancelada
 │   ├── Requests/
 │   │   ├── LoginRequest.cs
-│   │   ├── CriarOscRequest.cs
+│   │   ├── CriarOsRequest.cs
 │   │   ├── CriarUsuarioRequest.cs
 │   │   ├── AtualizarUsuarioRequest.cs
-│   │   └── AdminOscRequest.cs
+│   │   └── AdminOsRequest.cs
 │   └── Responses/
 │       ├── LoginResponse.cs    # Token JWT + dados do usuário
-│       ├── OscResponse.cs      # OSC sem dados sensíveis
+│       ├── OsResponse.cs       # OS sem dados sensíveis
 │       └── UsuarioResponse.cs  # Usuário sem senha
 ├── Repositories/
-│   ├── OscRepository.cs        # Acesso ao banco — OSCs
+│   ├── OsRepository.cs         # Acesso ao banco — OSs
 │   └── UsuarioRepository.cs    # Acesso ao banco — Usuários
 ├── Services/
-│   ├── OscService.cs           # Regras de negócio das OSCs
+│   ├── OsService.cs            # Regras de negócio das OSs
 │   ├── TokenService.cs         # Geração do token JWT
 │   └── UsuarioService.cs       # Regras de negócio dos usuários
 ├── appsettings.json            # Configurações gerais (sem credenciais)
@@ -167,16 +168,16 @@ GestaoOscAPI/
 | PUT | `/usuarios/{id}` | Atualizar usuário |
 | DELETE | `/usuarios/{id}` | Deletar usuário |
 
-### OSCs
+### OSs
 
 | Método | Rota | Descrição |
 |--------|------|-----------|
-| GET | `/osc` | Listar todas as OSCs |
-| GET | `/osc/{id}` | Buscar OSC por ID |
-| GET | `/osc/emitente/{id}` | Listar OSCs criadas pelo emitente |
-| GET | `/osc/gerente/{id}` | Listar OSCs pendentes de assinatura do gerente |
-| POST | `/osc` | Criar nova OSC |
-| DELETE | `/osc/{id}` | Deletar OSC |
-| POST | `/osc/{id}/assinar` | Assinar OSC (qualquer gerente do setor) |
-| PUT | `/osc/{id}/concluir` | Concluir OSC (apenas Admin, todos devem ter assinado) |
-| PUT | `/osc/{id}/cancelar` | Cancelar OSC (apenas Admin) |
+| GET | `/os` | Listar todas as OSs |
+| GET | `/os/{id}` | Buscar OS por ID |
+| GET | `/os/emitente/{id}` | Listar OSs criadas pelo emitente |
+| GET | `/os/gerente/{id}` | Listar OSs pendentes de assinatura do gerente |
+| POST | `/os` | Criar nova OS |
+| DELETE | `/os/{id}` | Deletar OS |
+| POST | `/os/{id}/assinar` | Assinar OS (qualquer gerente do setor) |
+| PUT | `/os/{id}/concluir` | Concluir OS (apenas Admin, todos devem ter assinado) |
+| PUT | `/os/{id}/cancelar` | Cancelar OS (apenas Admin) |
