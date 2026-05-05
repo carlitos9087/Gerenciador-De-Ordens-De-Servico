@@ -34,7 +34,7 @@ namespace GestaoOscAPI.Services
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddHours(8),
+                expires: DateTime.UtcNow.AddMinutes(30),
                 signingCredentials: credenciais
             );
 
