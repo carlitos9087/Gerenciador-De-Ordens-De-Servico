@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  gestaooscapi:
+    image: gestaooscapi:latest
+    container_name: gestaooscapi
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - ConnectionStrings__DefaultConnection=${DB_CONNECTION}
+      - Jwt__Key=${JWT_KEY}
+      - Jwt__Issuer=${JWT_ISSUER}
+      - Jwt__Audience=${JWT_AUDIENCE}
+      - ASPNETCORE_ENVIRONMENT=Production
+    volumes:
+      - /opt/wallet/gestaooscdb:/app/Wallet:ro

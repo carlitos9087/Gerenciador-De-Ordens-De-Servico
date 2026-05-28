@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using Oracle.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
 namespace GestaoOscAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260318222341_RemoveFlags")]
-    partial class RemoveFlags
+    [Migration("20260525230642_InitialCreate_Oracle")]
+    partial class InitialCreate_Oracle
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,55 +21,55 @@ namespace GestaoOscAPI.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.0")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+            OracleModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("GestaoOscAPI.Models.Entities.Osc", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("NUMBER(10)");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AcaoTomada")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<DateTime>("DataEmissao")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<int>("EmitenteId")
-                        .HasColumnType("integer");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("EmitenteNome")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("EmitenteSetor")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<bool>("EngenhariaAssinou")
-                        .HasColumnType("boolean");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<string>("Equipamento")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<bool>("ProducaoAssinou")
-                        .HasColumnType("boolean");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<bool>("QualidadeAssinou")
-                        .HasColumnType("boolean");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<int>("Status")
-                        .HasColumnType("integer");
+                        .HasColumnType("NUMBER(10)");
 
                     b.HasKey("Id");
 
@@ -80,27 +80,27 @@ namespace GestaoOscAPI.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("NUMBER(10)");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<int>("Perfil")
-                        .HasColumnType("integer");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Senha")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<int>("Setor")
-                        .HasColumnType("integer");
+                        .HasColumnType("NUMBER(10)");
 
                     b.HasKey("Id");
 
