@@ -56,8 +56,15 @@ builder.Services.AddScoped<OscRepository>();
 builder.Services.AddScoped<UsuarioService>();
 builder.Services.AddScoped<OscService>();
 
+
+// Conexão com Supabase com PostgreeSQL
+//builder.Services.AddDbContext<AppDbContext>(options =>
+//    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+//Conexão com o Oracle Database
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseOracle(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 // ← Configura o JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
