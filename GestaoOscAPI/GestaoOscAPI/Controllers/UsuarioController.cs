@@ -5,6 +5,7 @@ using GestaoOscAPI.Models.Responses;
 using GestaoOscAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace GestaoOscAPI.Controllers;
 
@@ -101,8 +102,14 @@ public class UsuarioController : ControllerBase
     [HttpPut("/usuarios/{id}")]
     public IActionResult AtualizarUsuario(int id, [FromBody] AtualizarUsuarioRequest request)
     {
-        Usuario? usuario = usuarioService.BuscarPorId(id);
 
+        var logadoId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+        var logado = usuarioService.BuscarPorId(logadoId);
+
+        if (logado == null || logado.Perfil != PerfilUsuario.Administrador)
+            return Unauthorized();
+
+        Usuario? usuario = usuarioService.BuscarPorId(id);
         if (usuario == null)
             return NotFound();
 
@@ -123,8 +130,14 @@ public class UsuarioController : ControllerBase
     [HttpDelete("/usuarios/{id}")]
     public IActionResult DeletarUsuario (int id)
     {
-        Usuario? usuario = usuarioService.BuscarPorId(id);
+        var logadoId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+        var logado = usuarioService.BuscarPorId(logadoId);
 
+        if (logado == null || logado.Perfil != PerfilUsuario.Administrador)
+            return Unauthorized();
+
+
+        Usuario? usuario = usuarioService.BuscarPorId(id);
         if (usuario == null) 
             return NotFound();
 

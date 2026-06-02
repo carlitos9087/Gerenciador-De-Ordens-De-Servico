@@ -1,7 +1,8 @@
-﻿using GestaoOscAPI.Repositories;
+﻿using GestaoOscAPI.Models.Entities;
 using GestaoOscAPI.Models.Enums;
-using GestaoOscAPI.Models.Entities;
 using GestaoOscAPI.Models.Responses;
+using GestaoOscAPI.Repositories;
+using System.Security.Claims;
 
 namespace GestaoOscAPI.Services
 {
@@ -82,5 +83,6 @@ namespace GestaoOscAPI.Services
         {
             return usuarioRepository.Deletar(id);
         }
+
     }
 }
