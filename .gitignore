@@ -485,3 +485,13 @@ $RECYCLE.BIN/
 
 
 **/appsettings.Development.json
+
+# Oracle Wallet 
+GestaoOscAPI/GestaoOscAPI/Wallet/
+*.sso
+*.p12
+*.pem
+*.jks
+tnsnames.ora
+sqlnet.ora
+ojdbc.properties
